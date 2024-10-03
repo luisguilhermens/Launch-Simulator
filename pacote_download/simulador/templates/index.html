@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Lançamento Oblíquo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Simulador de Lançamento Oblíquo</h1>
+    <form method="POST">
+        <label for="s0">Posição Inicial (s0):</label>
+        <input type="number" step="any" name="s0" required>
+        <label for="v0">Velocidade Inicial (v0):</label>
+        <input type="number" step="any" name="v0" required>
+        <label for="a">Aceleração (a):</label>
+        <input type="number" step="any" name="a" required>
+        <button type="submit">Simular</button>
+    </form>
+
+    {% if t and s_t %}
+    <canvas id="graficoTrajetoria"></canvas>
+    <script>
+        const ctx = document.getElementById('graficoTrajetoria').getContext('2d');
+        const t_values = {{ t|safe }};
+        const s_values = {{ s_t|safe }};
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: t_values,
+                datasets: [{
+                    label: 'Posição ao longo do tempo',
+                    data: s_values,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Tempo (s)' } },
+                    y: { title: { display: true, text: 'Posição (m)' } }
+                }
+            }
+        });
+    </script>
+    {% endif %}
+</body>
+</html>
